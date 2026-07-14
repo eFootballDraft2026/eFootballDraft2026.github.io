@@ -3,209 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eFootball Draft</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Lançamento</title>
     <style>
         @font-face {
             font-family: 'eFootball Stencil';
             src: url('eFootballStencil-Regular.woff2') format('woff2'),
                  url('eFootballStencil-Regular.woff') format('woff');
-            font-weight: normal; font-style: normal; font-display: swap;
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
         }
 
-        body { background-color: #000096; font-family: 'eFootball Stencil', sans-serif; color: #FAFF03; overflow: hidden; }
-
-        .btn-base {
-            cursor: pointer; text-transform: uppercase; text-align: center;
-            display: flex; align-items: center; justify-content: center;
-            width: 280px; height: 50px;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
-            user-select: none; border-radius: 9999px;
-            box-shadow: 0 4px 0 #b3b800;
-            background-color: #FAFF03; color: #000096;
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000096;
+            font-family: 'eFootball Stencil', sans-serif;
+            text-align: center;
         }
 
-        .btn-base:active { transform: translateY(4px); box-shadow: 0 0 0 #b3b800; }
-
-        .input-custom {
-            background-color: #FAFF03; color: #000096; font-family: 'eFootball Stencil', sans-serif;
-            font-size: 20px; padding: 10px 20px; border-radius: 9999px;
-            width: 100%; max-width: 250px; border: none; outline: none; text-align: center;
+        img {
+            max-width: 300px;
+            margin-bottom: -20px;
         }
 
-        #transition-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: black; opacity: 0; pointer-events: none; transition: opacity 0.75s ease; z-index: 50; }
-        .screen { display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center; }
-        .active { display: flex; }
-        
-        /* Estilos do efeito de fade */
-        #coins-modal { opacity: 0; pointer-events: none; transition: opacity 1s ease; }
-        #coins-modal.show { opacity: 1; pointer-events: auto; }
+        h1 {
+            color: #FAFF03;
+            font-size: 2rem;
+            font-weight: normal;
+            margin: 0 20px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="transition-overlay"></div>
+    <img src="https://i.imgur.com/rkGuKoL.png" alt="Logo">
+    <h1>Aguarde a data de lançamento para jogar!<br>Data de lançamento:<br>15/07</h1>
 
-    <!-- Menu -->
-    <div id="menu-screen" class="screen active">
-        <img src="https://i.imgur.com/rkGuKoL.png" alt="Logo eFootball Draft" class="w-full max-w-[300px] mb-0">
-        <div class="flex flex-col items-center gap-2 w-full">
-            <div class="btn-base" style="font-size: 30px;" onclick="handlePlay()">Jogar</div>
-            <div class="btn-base" style="font-size: 30px;" onclick="navigateTo('info-screen')">Informações</div>
-        </div>
-    </div>
-
-    <!-- Central de Contas -->
-    <div id="account-screen" class="screen p-8 text-center max-w-lg mx-auto">
-        <h1 class="text-4xl mb-4">Central de Contas</h1>
-        <div class="flex flex-col items-center gap-2 w-full">
-            <div class="btn-base" style="font-size: 30px;" onclick="navigateTo('create-account-screen')">Criar conta</div>
-            <div style="background-color: #4a4a4a; color: #888888; width: 280px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 30px; border-radius: 9999px;">Fazer login</div>
-        </div>
-    </div>
-
-    <!-- Criar Conta -->
-    <div id="create-account-screen" class="screen p-8 text-center max-w-lg mx-auto gap-0">
-        <h1 class="text-4xl mb-2">Criar Conta</h1>
-        <label class="text-xl">Nome de usuário:</label>
-        <input type="text" id="input-username" class="input-custom" placeholder="Digite seu nome">
-        <div class="btn-base mt-4" style="font-size: 30px;" onclick="navigateTo('team-screen')">Concluir</div>
-    </div>
-
-    <!-- Configurar Time -->
-    <div id="team-screen" class="screen p-8 text-center max-w-lg mx-auto gap-0">
-        <h1 class="text-4xl mb-2">Seu Time</h1>
-        <label class="text-xl">Nome do seu time:</label>
-        <input type="text" id="input-teamname" class="input-custom" placeholder="Ex: Real Madrid">
-        <label class="text-xl mt-2">Sigla de seu time:</label>
-        <input type="text" class="input-custom" placeholder="Ex: RMA" maxlength="3">
-        <div class="btn-base mt-4" style="font-size: 30px;" onclick="saveAndNavigate('game-screen')">Concluir</div>
-    </div>
-
-    <!-- Tela do Jogo -->
-    <div id="game-screen" class="screen p-4 text-center max-w-lg mx-auto">
-        <h1 class="text-3xl mb-0">1ª Temporada</h1>
-        <p class="text-sm opacity-80 mb-6">Tempo de duração: 15/07 - 15/08</p>
-        
-        <div class="w-full max-w-[300px] mb-8 bg-[#000070] p-4 rounded-2xl border-2 border-[#FAFF03]">
-            <div class="flex justify-between items-start mb-4">
-                <div class="text-left">
-                    <div id="display-user" class="text-xl">Nome Usuário</div>
-                    <div id="display-team" class="text-sm">Nome do Time</div>
-                </div>
-                <div class="text-right">
-                    <div class="text-[#FAFF03]">eFootball Coins:</div>
-                    <div id="display-coins" class="text-xl">0</div>
-                </div>
-            </div>
-            <div class="text-xs flex justify-between mb-1">
-                <span>NÍVEL <span id="lvl-val">1</span></span>
-                <span><span id="xp-val">0</span> / <span id="next-xp">5</span> XP</span>
-            </div>
-            <div class="w-full bg-[#000050] h-3 rounded-full border border-[#FAFF03] overflow-hidden">
-                <div id="xp-bar" class="bg-[#FAFF03] h-full" style="width: 0%;"></div>
-            </div>
-        </div>
-
-        <div class="flex flex-col items-center gap-2 w-full">
-            <div class="btn-base" style="font-size: 25px;">Partida</div>
-            <div class="btn-base" style="font-size: 25px;">Meu Time</div>
-            <div class="btn-base" style="font-size: 25px;">Loja</div>
-            <div class="btn-base" style="font-size: 25px;">Eventos</div>
-            <div class="btn-base" style="font-size: 25px;">Drafts</div>
-        </div>
-
-        <!-- Modal de Resgate -->
-        <div id="coins-modal" class="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-50">
-            <div class="relative bg-[#000096] border-4 border-[#FAFF03] p-8 rounded-3xl text-center">
-                <button onclick="closeModal(false)" class="absolute top-4 right-6 text-3xl font-bold">X</button>
-                <div class="text-6xl mb-4">🪙</div>
-                <div class="text-4xl mb-6">1000</div>
-                <div class="btn-base" style="font-size: 25px; margin: 0 auto;" onclick="closeModal(true)">Resgatar</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Informações -->
-    <div id="info-screen" class="screen p-8 text-center max-w-lg mx-auto">
-        <h1 class="text-5xl mb-6">v1.0_demo</h1>
-        <p class="text-xl leading-relaxed">
-            Esse jogo é feito por fans, é inspirado no jogo eFootball que é produzido pela Konami.
-        </p>
-    </div>
-
-    <script>
-        const overlay = document.getElementById('transition-overlay');
-        let currentCoins = 0;
-        let currentLevel = 1;
-        let currentXp = 0;
-        let hasShownModal = false;
-        let hasAccount = false;
-
-        function updateXpDisplay() {
-            const nextXp = currentLevel * 5;
-            document.getElementById('lvl-val').innerText = currentLevel;
-            document.getElementById('xp-val').innerText = currentXp;
-            document.getElementById('next-xp').innerText = nextXp;
-            document.getElementById('xp-bar').style.width = (currentXp / nextXp) * 100 + "%";
-        }
-
-        function handlePlay() {
-            if (hasAccount) navigateTo('game-screen');
-            else navigateTo('account-screen');
-        }
-
-        function saveAndNavigate(screenId) {
-            document.getElementById('display-user').innerText = document.getElementById('input-username').value;
-            document.getElementById('display-team').innerText = document.getElementById('input-teamname').value;
-            hasAccount = true;
-            
-            // Força o histórico a voltar para o menu
-            history.replaceState({ screen: 'menu-screen' }, '', '#menu-screen');
-            navigateTo(screenId);
-        }
-
-        function closeModal(claim) {
-            const modal = document.getElementById('coins-modal');
-            modal.classList.remove('show');
-            setTimeout(() => {
-                if (claim) currentCoins = 1000;
-                document.getElementById('display-coins').innerText = currentCoins;
-                modal.style.display = 'none';
-            }, 1000);
-        }
-
-        function navigateTo(screenId, saveHistory = true) {
-            overlay.style.opacity = '1';
-            setTimeout(() => {
-                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-                document.getElementById(screenId).classList.add('active');
-                overlay.style.opacity = '0';
-                
-                if(screenId === 'game-screen' && !hasShownModal) {
-                    setTimeout(() => {
-                        const modal = document.getElementById('coins-modal');
-                        modal.style.display = 'flex';
-                        setTimeout(() => modal.classList.add('show'), 50);
-                        hasShownModal = true;
-                    }, 1000);
-                }
-
-                if (saveHistory) history.pushState({ screen: screenId }, '', '#' + screenId);
-            }, 2000);
-        }
-
-        window.onpopstate = function(event) {
-            overlay.style.opacity = '1';
-            setTimeout(() => {
-                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-                const target = event.state && event.state.screen ? event.state.screen : 'menu-screen';
-                document.getElementById(target).classList.add('active');
-                overlay.style.opacity = '0';
-            }, 2000);
-        };
-
-        updateXpDisplay();
-    </script>
 </body>
 </html>
